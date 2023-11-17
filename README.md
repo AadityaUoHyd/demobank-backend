@@ -101,15 +101,19 @@ $ docker info
 ```
 2.4	Install maven in Ubuntu VM using below command <br>
 $ sudo apt install git <br><br>
+
 2.5	Install git client in Ubuntu VM using below command <br>
 $ sudo apt install git <br><br>
+
 # Step-3: Backend Application Deployment
 3.1 Clone backend application using git clone  <br>
 	$ git clone [repo-url]  <br>
        e.g. $ git clone https://github.com/AadityaUoHyd/demobank-backend.git <br><br>
+       
 3.2 Perform maven build for backend application  <br>
 	$ cd [project-directory] <br>
 	$ mvn clean package <br><br>
+ 
 3.3 Write Dockerfile for backend application  <br>
 ```
 	FROM  openjdk:17  
@@ -126,6 +130,7 @@ $ sudo apt install git <br><br>
 	$ docker push aadiraj48dockerhub/demobankbackendimage
 ```
 3.5 Connect to K8s Cluster Control Plane. <br><br>
+
 3.6 Create Deployment Manifest file(say, demobank-backend-deployment.yml) for backend application like below <br>
 ```
 ---
@@ -159,17 +164,18 @@ spec:
  	  nodePort: 30001
 ---
 ```
-2.7 Deploy backend application on K8s cluster <br>
+3.7 Deploy backend application on K8s cluster <br>
 ```
 	$ kubectl apply -f demobank-backend-deployment.yml
 	$ kubectl get pods
 	$ kubectl get pods -o wide
 	$ kubectl get svc
 ```
-2.8 Access backend applicatiob using URL <br>
+3.8 Access backend applicatiob using URL <br>
 	URL: http://node-port:nodeip/
-# Step-3: Frontend Application Deployment
-3.1 Install Node and Angular CLI in Ubuntu VM using below command <br>
+# Step-4: Frontend Application Deployment
+
+4.1 Install Node and Angular CLI in Ubuntu VM using below command <br>
 ```
 $ curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
 $ source ~/.bashrc
@@ -178,10 +184,11 @@ $ node version
 $ npm install -g @angular/cli
 $ ng v
 ```
-3.2 Clone Frontend application using git clone <br>
+4.2 Clone Frontend application using git clone <br>
  	$ git clone [repo-url]  <br>
        e.g. $ git clone https://github.com/AadityaUoHyd/demo-bank-ui.git <br><br>
-3.3 Configure Backend Application URL in Frontend Application <br>
+       
+4.3 Configure Backend Application URL in Frontend Application <br>
 ```
 	$ cd bank-app-ui
 	$ cd src/app/environments/
@@ -189,11 +196,13 @@ $ ng v
 ```
 Note : configure backend url in frontend application for integration. <br>
 Say, rooturl=”http://13.215.12.143:30001”   <br><br>
-3.4 Build frontend Application
+
+4.4 Build frontend Application <br>
 	$ ng build  <br>
 Note: If you get a problem saying, “could-not-find-the-implementation-for-builder-angular-devkit-build-angulardev”, then execute below command. <br>
  	 $ npm install - -save-dev @angular-devkit/build-angular  <br><br>
-3.4 Create Dockerfile for Angular application <br>
+   
+4.5 Create Dockerfile for Angular application <br>
 ```
 #use official nginx image as the base image
 FROM nginx:latest
@@ -202,14 +211,16 @@ COPY  /dist/bank-app-ui  /usr/share/nginx/html
 #Expose port 80
 EXPOSE 80
 ```
-3.5 Create docker image for Frontend Application <br>
+
+4.6 Create docker image for Frontend Application <br>
 ```
 	$ docker build -t bank_app_ui_ng_app .
 	$ docker tag bank_app_ui_ng_app  aadiraj48dockerhub/bank_app_ui_ng_app
 	$ docker login
 	$ docker push aadiraj48dockerhub/bank_app_ui_ng_app
 ```
-3.6 Create deployment manifest for Frontend Application(bankappui-deployment.yml). <br>
+
+4.7 Create deployment manifest for Frontend Application(bankappui-deployment.yml). <br>
 ```
 ---
 apiVersion: apps/v1
@@ -247,12 +258,14 @@ spec:
  	  nodePort: 30002
 ---
 ```
-3.7 Deploy frontend application on K8s and expose as nodeport <br>
+
+4.8 Deploy frontend application on K8s and expose as nodeport <br>
 ```
  	$ kubectl apply -f bankappui-deployment.yml
  	$ kubectl get pods
  	$ kubectl get pods -o wide
  	$ kubectl get svc
 ```
-3.8 Access frontend application using URL <br>
+
+4.9 Access frontend application using URL <br>
  	URL : http://node-ip:nodeport/ 
